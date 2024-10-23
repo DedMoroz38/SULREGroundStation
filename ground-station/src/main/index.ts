@@ -2,6 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { SerialPort } from 'serialport'
 
 function createWindow(): void {
   // Create the browser window.
@@ -16,6 +17,12 @@ function createWindow(): void {
       sandbox: false
     }
   })
+  setupWindow(mainWindow)
+
+  setInterval(() => {
+    const data = { message: 'Hello from Main Process!', timestamp: Date.now() }
+    mainWindow.webContents.send('data-from-main', data)
+  }, 1000)
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
@@ -72,3 +79,28 @@ app.on('window-all-closed', () => {
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
+async function setupWindow(window) {
+  ipcMain.handle('serialport-open', async (event, path, baudRate) => {
+    try {
+      const port = new SerialPort({ path, baudRate })
+
+      port.on('data', (data) => {
+        console.log('Data from Teensy:', data.toString())
+        window.webContents.send('serialport-data', data.toString())
+      })
+
+      port.on('error', (err) => {
+        console.error('SerialPort Error: ', err)
+        window.webContents.send('serialport-error', err.message)
+      })
+
+      return 'Connected to ' + path
+    } catch (error) {
+      return 'Error connecting to serial port: ' + error.message
+    }
+  })
+
+  ipcMain.handle('click', (_, records) => {
+    return console.log('click: ', records)
+  })
+}

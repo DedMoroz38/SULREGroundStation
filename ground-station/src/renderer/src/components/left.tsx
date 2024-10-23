@@ -1,3 +1,5 @@
+import { ipcRenderer } from 'electron'
+import { useEffect } from 'react'
 import styled from 'styled-components'
 
 const list = [
@@ -19,6 +21,11 @@ const list = [
 ]
 
 export const Left = () => {
+  useEffect(() => {
+    self.ElectronAPI!.addEventListener('data-from-main', (version) => {
+      console.log(version)
+    })
+  }, [])
   return (
     <Wrapper>
       <div>
@@ -26,6 +33,7 @@ export const Left = () => {
           <Item key={index} img={item.img} text={item.text} value={item.value} />
         ))}
       </div>
+      <button onClick={() => self.ElectronAPI.click('sent data')}>Click</button>
     </Wrapper>
   )
 }

@@ -1,8 +1,25 @@
-import { contextBridge } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
+function addEventListener(event, listener) {
+  ipcRenderer.on(event, (e, args) => listener(args))
+  return {
+    unsubscribe() {
+      removeEventListener(event, listener)
+    }
+  }
+}
+
+function openSerial() {
+  return ipcRenderer.invoke('serialport-open')
+}
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+function click(data) {
+  return ipcRenderer.invoke('click', data)
+}
+
 // Custom APIs for renderer
-const api = {}
+const api = { addEventListener, openSerial, click }
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise
@@ -10,7 +27,7 @@ const api = {}
 if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld('electron', electronAPI)
-    contextBridge.exposeInMainWorld('api', api)
+    contextBridge.exposeInMainWorld('ElectronAPI', api)
   } catch (error) {
     console.error(error)
   }
