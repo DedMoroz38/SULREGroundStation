@@ -79,8 +79,11 @@ app.on('window-all-closed', () => {
 
 // In this file you can include the rest of your app"s specific main process
 // code. You can also put them in separate files and require them here.
-async function setupWindow(window) {
-  ipcMain.handle('serialport-open', async (event, path, baudRate) => {
+async function setupWindow(window): Promise<void> {
+  ipcMain.handle('serialport-open', async () => {
+    console.log('opening serial')
+    const path = '/dev/tty.usbmodem158559001'
+    const baudRate = 9600
     try {
       const port = new SerialPort({ path, baudRate })
 

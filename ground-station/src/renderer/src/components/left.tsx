@@ -33,7 +33,7 @@ export const Left = () => {
           <Item key={index} img={item.img} text={item.text} value={item.value} />
         ))}
       </div>
-      <button onClick={() => self.ElectronAPI.click('sent data')}>Click</button>
+      <button onClick={() => self.ElectronAPI.openSerial()}>Open Serial</button>
     </Wrapper>
   )
 }
