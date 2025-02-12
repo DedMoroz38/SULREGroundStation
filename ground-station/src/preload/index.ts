@@ -11,6 +11,7 @@ function addEventListener(event, listener) {
 }
 
 function openSerial() {
+  console.log('clicked')
   return ipcRenderer.invoke('serialport-open')
 }
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

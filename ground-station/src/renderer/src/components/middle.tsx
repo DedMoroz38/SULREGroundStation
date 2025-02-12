@@ -5,8 +5,7 @@ export const Middle = () => {
   return (
     <Wrapper>
       <RocketPositionWrapper>
-        <RocketWrapper />
-        {/* <img src={rocket} alt="" /> */}
+        {/* <RocketWrapper /> */}
       </RocketPositionWrapper>
     </Wrapper>
   )
