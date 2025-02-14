@@ -2,7 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { SerialPort } from 'serialport'
+import { SerialPort, ReadlineParser } from 'serialport'
 
 function createWindow(): void {
   // Create the browser window.
@@ -62,25 +62,16 @@ app.on('window-all-closed', () => {
 async function setupWindow(window): Promise<void> {
   ipcMain.handle('serialport-open', async () => {
     console.log('opening serial')
-    const path = '/dev/tty.usbmodem101'
+    const path = '/dev/tty.usbmodem212301'
     const baudRate = 9600
     try {
       const port = new SerialPort({ path, baudRate })
 
-      port.on('data', (data) => {
-        const uint8Array = new Uint8Array(data)
-        console.log('Data from Teensy:', uint8Array)
-        const byteArray = Array.from(uint8Array)
-        const completeArray: number[] = []
+      const parser = port.pipe(new ReadlineParser({ delimiter: '\n' }))
 
-        if (byteArray.includes(170)) {
-          const payload = byteArray.slice(byteArray.indexOf(170))
-          let length = payload.length
-
-          completeArray.push(...payload)
-        }
-
-        window.webContents.send('serialport-data', data.toString())
+      parser.on('data', (data) => {
+        console.log(data)
+        window.webContents.send('serialport-data', data)
       })
 
       port.on('error', (err) => {

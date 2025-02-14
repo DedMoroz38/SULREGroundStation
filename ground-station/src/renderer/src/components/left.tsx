@@ -1,36 +1,11 @@
-import { ipcRenderer } from 'electron'
-import { useEffect } from 'react'
 import styled from 'styled-components'
 
-const list = [
-  {
-    img: 'https://via.placeholder.com/150',
-    text: 'Pressure',
-    value: '1Pa'
-  },
-  {
-    img: 'https://via.placeholder.com/150',
-    text: 'Thermocouples',
-    value: '12 whatever'
-  },
-  {
-    img: 'https://via.placeholder.com/150',
-    text: 'packet lose',
-    value: '100'
-  }
-]
-
-export const Left = () => {
-  useEffect(() => {
-    self.ElectronAPI!.addEventListener('data-from-main', (version) => {
-      console.log(version)
-    })
-  }, [])
+export const Left = ({ data }) => {
   return (
     <Wrapper>
       <div>
-        {list.map((item, index) => (
-          <Item key={index} img={item.img} text={item.text} value={item.value} />
+        {Array.from(data.entries()).map(([key, value]) => (
+          <Item key={key} img={null} text={`${key}`} value={value} />
         ))}
       </div>
       <button onClick={() => self.ElectronAPI.openSerial()}>Open Serial</button>
