@@ -5,7 +5,7 @@ export const Middle = () => {
   return (
     <Wrapper>
       <RocketPositionWrapper>
-        {/* <RocketWrapper /> */}
+        <RocketWrapper />
       </RocketPositionWrapper>
     </Wrapper>
   )

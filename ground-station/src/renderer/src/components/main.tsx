@@ -35,7 +35,7 @@ export const Main = () => {
   const [data, setData] = useState<Map<DataKeysEnum, number>>(new Map())
 
   useEffect(() => {
-    self.ElectronAPI!.addEventListener('serialport-data', (data) => {
+    window.ElectronAPI!.addEventListener('serialport-data', (data) => {
       stringToEnumMap(data)
     })
   }, [])
@@ -57,4 +57,3 @@ const Wrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
 `
-

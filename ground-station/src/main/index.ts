@@ -59,7 +59,7 @@ app.on('window-all-closed', () => {
   }
 })
 
-async function setupWindow(window): Promise<void> {
+async function setupWindow(window: BrowserWindow): Promise<void> {
   ipcMain.handle('serialport-open', async () => {
     console.log('opening serial')
     const path = '/dev/tty.usbmodem212301'

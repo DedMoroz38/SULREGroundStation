@@ -1,20 +1,36 @@
-import { Canvas } from 'react-three-fiber'
-
+import { Canvas, useFrame } from 'react-three-fiber'
+import { Group } from 'three'
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei'
+import { useRef } from 'react'
 
 export const RocketWrapper = () => {
   return (
     <div>
       <Canvas style={{ height: '100vh', width: '100vw' }}>
-        <group>
-          <Rocket />
-          <Axes />
-        </group>
+        <RocketWithAxis />
         <ambientLight />
         <PerspectiveCamera position={[5, 5, 10]} makeDefault />
         <OrbitControls />
       </Canvas>
     </div>
+  )
+}
+
+function RocketWithAxis() {
+  const rocketRef = useRef<Group | null>(null)
+
+  useFrame(() => {
+    if (rocketRef.current) {
+      rocketRef.current.rotation.z += 0.001
+      rocketRef.current.rotation.x += 0.001
+    }
+  })
+
+  return (
+    <group ref={rocketRef}>
+      <Rocket />
+      <Axes />
+    </group>
   )
 }
 
@@ -34,14 +50,14 @@ function Rocket() {
       </mesh>
 
       {/* Rocket Fins */}
-      {/* <mesh position={[0, -1.2, 0.28]} rotation={[0, 0, -Math.PI / 1]}>
+      <mesh position={[0, -1.2, 0.28]} rotation={[0, 0, -Math.PI / 1]}>
         <boxGeometry args={[0.05, 0.5, 0.3]} />
         <meshStandardMaterial color="blue" />
       </mesh>
       <mesh position={[0.2, -1.2, 0.28]} rotation={[0, 1.5, -Math.PI / 1]}>
         <boxGeometry args={[0.05, 0.5, 0.3]} />
         <meshStandardMaterial color="blue" />
-      </mesh> */}
+      </mesh>
       <mesh position={[0, -1.2, 0.28]} rotation={[Math.PI / 1.2, 0, 0]}>
         <boxGeometry args={[0.05, 0.5, 0.3]} />
         <meshStandardMaterial color="blue" />

@@ -1,11 +1,12 @@
+import { DataKeysEnum, dataKeysToName } from '@renderer/enums/DataKeysEnum'
 import styled from 'styled-components'
 
-export const Left = ({ data }) => {
+export const Left = ({ data }: { data: Map<DataKeysEnum, number> }) => {
   return (
     <Wrapper>
       <div>
         {Array.from(data.entries()).map(([key, value]) => (
-          <Item key={key} img={null} text={`${key}`} value={value} />
+          <Item key={key} text={dataKeysToName(key)} value={value} />
         ))}
       </div>
       <button onClick={() => self.ElectronAPI.openSerial()}>Open Serial</button>
@@ -14,12 +15,12 @@ export const Left = ({ data }) => {
 }
 
 type ItemProps = {
-  img: string
+  img?: string
   text: string
-  value: string
+  value: number | string
 }
 
-const Item = ({ img, text, value }: ItemProps) => {
+const Item = ({ text, value }: ItemProps) => {
   return (
     <div>
       {/* <img src={img} alt={text} /> */}
