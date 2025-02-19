@@ -1,7 +1,9 @@
 import { Canvas, useFrame } from 'react-three-fiber'
 import { Group } from 'three'
-import { OrbitControls, PerspectiveCamera } from '@react-three/drei'
+import { OrbitControls, PerspectiveCamera, useTexture } from '@react-three/drei'
 import { useRef } from 'react'
+import sulre from '../../assets/sulre.png'
+import * as THREE from 'three'
 
 export const RocketWrapper = () => {
   return (
@@ -35,12 +37,18 @@ function RocketWithAxis() {
 }
 
 function Rocket() {
+  const labelTexture = useTexture(sulre)
+
+  labelTexture.wrapS = THREE.ClampToEdgeWrapping // Prevents it from repeating
+  labelTexture.wrapT = THREE.ClampToEdgeWrapping
+  labelTexture.repeat.set(2.5, 2.5) // Only covers 50% of the cylinder horizontally
+
   return (
     <group position={[0, 0, 0]}>
       {/* Rocket Body */}
       <mesh position={[0, 0, 0]} rotation={[0, 0, 0]}>
         <cylinderGeometry args={[0.2, 0.3, 3, 32]} />
-        <meshStandardMaterial color="silver" />
+        <meshStandardMaterial map={labelTexture} />
       </mesh>
 
       {/* Rocket Nose Cone */}
